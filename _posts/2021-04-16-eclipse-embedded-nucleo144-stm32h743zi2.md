@@ -1,9 +1,9 @@
 
 타겟보드
 ==
-NUCLEO144 STM32H743ZI2
-https://www.st.com/en/evaluation-tools/nucleo-h743zi.html
-타겟보드는 STM32CubeIDE를 사용하여 다운로드와 디버깅이 가능한데, Eclipse로도 컴파일/다운로드/디버깅이 가능한지 확인해봄.
+NUCLEO144 STM32H743ZI2  
+https://www.st.com/en/evaluation-tools/nucleo-h743zi.html  
+타겟보드는 STM32CubeIDE를 사용하여 다운로드와 디버깅이 가능한데, Eclipse로도 컴파일/다운로드/디버깅이 가능한지 확인해봄.  
 
 Eclipse 버전
 ==
@@ -12,9 +12,9 @@ Eclipse 버전
 
 링커스크립트 수정
 ==
-STM32CubeIDE에서 사용한 ld파일을 참고하여, mem.ld파일을 수정
+STM32CubeIDE에서 사용한 ld파일을 참고하여, mem.ld파일을 수정  
 
-프로젝트 생성시
+프로젝트 생성시  
 ```
 MEMORY
 {
@@ -60,5 +60,8 @@ MEMORY
   EXTMEMB3 (rx) : ORIGIN = 0x00000000, LENGTH = 0
 }
 ```
+아래 메모리맵은 743이 아니고 742에 대한 메모리 맵임. 743은 RAM크기가 다름.
+![Image Alt 텍스트]({{site.url}}/assets/img/stm32h742 memory map.png )
 
-![Image Alt 텍스트]({{site.url}}/assets/img/stm32h743 memory map.png )
+742, 742 메모리맵
+![Image Alt 텍스트]({{site.url}}/assets/img/stm32h742,743_memory_map.png )
