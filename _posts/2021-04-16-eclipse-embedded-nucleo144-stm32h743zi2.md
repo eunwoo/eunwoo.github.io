@@ -63,5 +63,7 @@ MEMORY
 아래 메모리맵은 743이 아니고 742에 대한 메모리 맵임. 743은 RAM크기가 다름.  
 ![Image Alt 텍스트]({{site.url}}/assets/img/stm32h742 memory map.png )  
 
-742, 742 메모리맵
+742, 743 메모리맵 비교  
 ![Image Alt 텍스트]({{site.url}}/assets/img/stm32h742,743_memory_map.png )  
+
+
