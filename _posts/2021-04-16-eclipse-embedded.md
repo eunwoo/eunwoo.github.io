@@ -2,6 +2,8 @@
 title: "semihosting.h"
 categories: eclipse embedded
 ---
+
+semihosting.h
 ```
 static inline int
 __attribute__ ((always_inline))
@@ -34,3 +36,25 @@ call_host (int reason, void* arg)
 }
 ```
 
+trace-impl.o.lst
+```
+  55              		.loc 2 99 1 view .LVU6
+  56              	.LBB9:
+ 100:../system/include/arm/semihosting.h **** {
+ 101:../system/include/arm/semihosting.h ****   int value;
+  57              		.loc 2 101 3 view .LVU7
+ 102:../system/include/arm/semihosting.h ****   asm volatile (
+  58              		.loc 2 102 3 view .LVU8
+  59 000e 0425     		movs	r5, #4
+  60              		.syntax unified
+  61              	@ 102 "../system/include/arm/semihosting.h" 1
+  62 0010 2846     		 mov r0, r5  
+  63 0012 2146     	 mov r1, r4  
+  64 0014 ABBE     	 bkpt #171 
+  65 0016 0446     	 mov r4, r0
+  66              	@ 0 "" 2
+  67              	.LVL2:
+```
+
+
+  
