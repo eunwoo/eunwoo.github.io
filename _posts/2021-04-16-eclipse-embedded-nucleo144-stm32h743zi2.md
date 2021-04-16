@@ -27,4 +27,4 @@ MEMORY
 }
 ```
 
-- ![Image Alt 텍스트]({{site.url}}/assets/eclipse.png )
+- ![Image Alt 텍스트]({{site.url}}/assets/img/eclipse.png )
