@@ -81,9 +81,9 @@ SBZP
 
 p.530 B1.5.5 Reset behavior
 p.531 B1.5.6 Exception entry behavior
-![Image Alt Exception entry]({{site.url}}/assets/img/excpetion entry1.png)  
+![Image Alt Exception entry]({{site.url}}/assets/img/excpetion entry1.png )  
 p.539 B1.5.8 Exception return behavior  
-![Image Alt Exception return]({{site.url}}/assets/img/excpetion return1.png)  
-![Image Alt Exception return]({{site.url}}/assets/img/excpetion return2.png)  
-![Image Alt Exception return]({{site.url}}/assets/img/excpetion return3.png)  
+![Image Alt Exception return]({{site.url}}/assets/img/excpetion return1.png )  
+![Image Alt Exception return]({{site.url}}/assets/img/excpetion return2.png )  
+![Image Alt Exception return]({{site.url}}/assets/img/excpetion return3.png )  
 
