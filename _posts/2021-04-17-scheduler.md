@@ -143,7 +143,23 @@ z: 네번째 명령어의 조건을 지정
 <x>, <y>, <z>는 T 또는 E 가능. T=Then, E=Else를 의미.
 T <firstcond> 조건을 만족하면 실행.  
 E <firstcond> 조건을 만족하지 않으면 실행.  
+<q>
+	.N narrow, 16-bit 명령어 생성
+	.W wide, 32-bit 명령어 생성
+둘 다 지정되지 않으면, 16-bit 명령어 생성
 
+vstmdbeq	r0!, {s16-s31}  
+==
+p.499  
+VSTM{<mode>}{<c>}{<q>}{.<size>} <Rn>{!}, <list>  
+<mode>  
+  IA  Increment After  
+  DB  Decrement Before. Stack에 저장시 주소가 감소해야 하므로 이 설정 사용
+<Rn>  base register  
+!  이 명령을 실행시 <Rn>값이 변하도록 함. <mode>가 DB인 경우, 필요  
+<c>    condition flag. 생략하면 always (AL)을 나타냄.  
+	
+	
 	
 
 
