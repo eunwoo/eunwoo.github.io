@@ -64,6 +64,39 @@ void xPortPendSVHandler( void )
 }
 ```
 
+```
+08003f00 <PendSV_Handler>:
+ 8003f00:	f3ef 8009 	mrs	r0, PSP
+ 8003f04:	f3bf 8f6f 	isb	sy
+ 8003f08:	4b15      	ldr	r3, [pc, #84]	; (8003f60 <pxCurrentTCBConst>)
+ 8003f0a:	681a      	ldr	r2, [r3, #0]
+ 8003f0c:	f01e 0f10 	tst.w	lr, #16
+ 8003f10:	bf08      	it	eq
+ 8003f12:	ed20 8a10 	vstmdbeq	r0!, {s16-s31}
+ 8003f16:	e920 4ff0 	stmdb	r0!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+ 8003f1a:	6010      	str	r0, [r2, #0]
+ 8003f1c:	e92d 0009 	stmdb	sp!, {r0, r3}
+ 8003f20:	f04f 0050 	mov.w	r0, #80	; 0x50
+ 8003f24:	f380 8811 	msr	BASEPRI, r0
+ 8003f28:	f3bf 8f4f 	dsb	sy
+ 8003f2c:	f3bf 8f6f 	isb	sy
+ 8003f30:	f7ff fb7e 	bl	8003630 <vTaskSwitchContext>
+ 8003f34:	f04f 0000 	mov.w	r0, #0
+ 8003f38:	f380 8811 	msr	BASEPRI, r0
+ 8003f3c:	bc09      	pop	{r0, r3}
+ 8003f3e:	6819      	ldr	r1, [r3, #0]
+ 8003f40:	6808      	ldr	r0, [r1, #0]
+ 8003f42:	e8b0 4ff0 	ldmia.w	r0!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+ 8003f46:	f01e 0f10 	tst.w	lr, #16
+ 8003f4a:	bf08      	it	eq
+ 8003f4c:	ecb0 8a10 	vldmiaeq	r0!, {s16-s31}
+ 8003f50:	f380 8809 	msr	PSP, r0
+ 8003f54:	f3bf 8f6f 	isb	sy
+ 8003f58:	4770      	bx	lr
+ 8003f5a:	bf00      	nop
+ 8003f5c:	f3af 8000 	nop.w
+```
+
 mrs r0, psp
 ==
 mrs: move to (general) register from special register  
@@ -93,4 +126,24 @@ ISB instruction
 p.59 Instruction Synchronization Barrier  
 
 ![Image Alt Exception return]({{site.url}}/assets/img/ISB1.png )  
+
+
+it eq  
+==
+p.236
+IfThen 명령
+- it 명령어 다음에 오는 최대 4개까지의 명령어를 조건부로 실행되도록 함  
+- it 블록: it명령어 다음에 오는 조건부 수행 명령어를 it 블록이라고 함
+- it 블록 내의 명령어로 분기할 수 없음. 즉, 다른 명령어를 수행 중 IT블록으로 분기하는 것은 안됨. 단, 예외에서 복귀하는 것은 가능.
+- CMP, CMN, TST 외의 다른 명령어는 조건플래그를 설정하지 않음.
+IT{x{y{z}}}<q> <firstcond>  
+x: 두번째 명령어의 조건을 지정  
+y: 세번째 명령어의 조건을 지정  
+z: 네번째 명령어의 조건을 지정  
+<x>, <y>, <z>는 T 또는 E 가능. T=Then, E=Else를 의미.
+T <firstcond> 조건을 만족하면 실행.  
+E <firstcond> 조건을 만족하지 않으면 실행.  
+
+	
+
 
