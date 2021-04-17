@@ -158,8 +158,16 @@ VSTM{<mode>}{<c>}{<q>}{.<size>} <Rn>{!}, <list>
 <Rn>  base register  
 !  이 명령을 실행시 <Rn>값이 변하도록 함. <mode>가 DB인 경우, 필요  
 <c>    condition flag. 생략하면 always (AL)을 나타냄.  
-	
-	
+
+ed20 8a10 	vstmdbeq	r0!, {s16-s31}  
+P = 1, U = 0, D = 0, W = 1  
+Vd = 0x08, imm8 = 0x10  
+d = UInt(Vd:D) = UInt(0x08:0) = 0x10 = 16  저장할 레지스터 목록의 첫번째 레지스터 번호
+regs = UInt(imm8) = 0x10 = 16 저장할 레지스터의 개수  
+imm32 = ZeroExtend(imm8:'00', 32) =  0x40 = 64 하위에 2비트를 0을 추가한 후, 32비트로 확장, 어드레스 감소값  
+저장할 레지스터의 개수가 16개이고, 각각이 4바이트이므로, 어드레스를 64 감소함.  
+![Image Alt Exception return]({{site.url}}/assets/img/VSTM1.png )  	
+![Image Alt Exception return]({{site.url}}/assets/img/VSTM2.png )  	
 	
 
 
