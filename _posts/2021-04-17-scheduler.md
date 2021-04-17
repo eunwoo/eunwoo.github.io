@@ -69,6 +69,5 @@ mrs r0, psp
 mrs: move to (general) register from special register
 p.516
 psp: process stack
-ARMv7-M에는 
 
-!["/assets/img/sp register.png"]
+![Image Alt 텍스트]({{site.url}}/assets/img/sp register.png )
