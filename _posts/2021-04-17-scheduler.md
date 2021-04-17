@@ -71,7 +71,8 @@ mrs: move to (general) register from special register
 psp: process stack  
 
 reference manual p.516  
-![Image Alt 텍스트]({{site.url}}/assets/img/sp register.png )
+![Image Alt 텍스트]({{site.url}}/assets/img/sp register.png )  
+![Image Alt 텍스트]({{site.url}}/assets/img/AAPCS1.png )  
 
 Thread mode  
 
@@ -80,6 +81,7 @@ SBZP
 
 p.530 B1.5.5 Reset behavior
 p.531 B1.5.6 Exception entry behavior
+![Image Alt Exception entry]({{site.url}}/assets/img/excpetion entry1.png)  
 p.539 B1.5.8 Exception return behavior  
 ![Image Alt Exception return]({{site.url}}/assets/img/excpetion return1.png)  
 ![Image Alt Exception return]({{site.url}}/assets/img/excpetion return2.png)  
