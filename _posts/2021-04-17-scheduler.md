@@ -66,8 +66,18 @@ void xPortPendSVHandler( void )
 
 mrs r0, psp
 ==
-mrs: move to (general) register from special register
-p.516
-psp: process stack
+mrs: move to (general) register from special register  
 
+psp: process stack  
+
+reference manual p.516  
 ![Image Alt 텍스트]({{site.url}}/assets/img/sp register.png )
+
+Thread mode  
+
+RAZ/WI  
+SBZP  
+
+p.539 B1.5.8 Exception return behavior  
+![Image Alt Exception return]({{site.url}}/assets/img/excpetion return1.png)  
+
