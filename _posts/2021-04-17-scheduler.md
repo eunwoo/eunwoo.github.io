@@ -4,7 +4,7 @@ https://github.com/micro-os-plus/micro-os-plus-iii-cortexm/blob/117e1bb2783b08b2
 
 FreeRTOS  
 ==
-ARM Cortex-M7
+ARM Cortex-M7  
 port.c
 ```
 void xPortPendSVHandler( void )
@@ -64,5 +64,10 @@ void xPortPendSVHandler( void )
 }
 ```
 
-
+mrs r0, psp
+==
+mrs: move to (general) register from special register
+p.516
+psp: process stack
+ARMv7-M에는 
 
