@@ -140,13 +140,13 @@ IT{x{y{z}}}<q> <firstcond>
 x: 두번째 명령어의 조건을 지정  
 y: 세번째 명령어의 조건을 지정  
 z: 네번째 명령어의 조건을 지정  
-<x>, <y>, <z>는 T 또는 E 가능. T=Then, E=Else를 의미.
+<x>, <y>, <z>는 T 또는 E 가능. T=Then, E=Else를 의미.  
 T <firstcond> 조건을 만족하면 실행.  
 E <firstcond> 조건을 만족하지 않으면 실행.  
-<q>
-	.N narrow, 16-bit 명령어 생성
-	.W wide, 32-bit 명령어 생성
-둘 다 지정되지 않으면, 16-bit 명령어 생성
+<q>  
+	.N narrow, 16-bit 명령어 생성  
+	.W wide, 32-bit 명령어 생성  
+둘 다 지정되지 않으면, 16-bit 명령어 생성  
 
 vstmdbeq	r0!, {s16-s31}  
 ==
