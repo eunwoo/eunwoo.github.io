@@ -136,13 +136,13 @@ IfThen 명령
 - it 블록: it명령어 다음에 오는 조건부 수행 명령어를 it 블록이라고 함  
 - it 블록 내의 명령어로 분기할 수 없음. 즉, 다른 명령어를 수행 중 IT블록으로 분기하는 것은 안됨. 단, 예외에서 복귀하는 것은 가능  
 - CMP, CMN, TST 외의 다른 명령어는 조건플래그를 설정하지 않음.  
-IT{x{y{z}}}<q> <firstcond>  
+IT{x{y{z}}}\<q\> \<firstcond\>  
 x: 두번째 명령어의 조건을 지정  
 y: 세번째 명령어의 조건을 지정  
 z: 네번째 명령어의 조건을 지정  
-<x>, <y>, <z>는 T 또는 E 가능. T=Then, E=Else를 의미.  
-T <firstcond> 조건을 만족하면 실행.  
-E <firstcond> 조건을 만족하지 않으면 실행.  
+\<x\>, \<y\>, \<z\>는 T 또는 E 가능. T=Then, E=Else를 의미.  
+T \<firstcond\> 조건을 만족하면 실행.  
+E \<firstcond\> 조건을 만족하지 않으면 실행.  
 <q>  
 	.N narrow, 16-bit 명령어 생성  
 	.W wide, 32-bit 명령어 생성  
@@ -151,13 +151,13 @@ E <firstcond> 조건을 만족하지 않으면 실행.
 vstmdbeq	r0!, {s16-s31}  
 ==
 p.499  
-VSTM{<mode>}{<c>}{<q>}{.<size>} <Rn>{!}, <list>  
-<mode>  
+VSTM{\<mode\>}{\<c\>}{\<q\>}{.\<size\>} \<Rn\>{!}, \<list\>  
+\<mode\>  
   IA  Increment After  
   DB  Decrement Before. Stack에 저장시 주소가 감소해야 하므로 이 설정 사용
-<Rn>  base register  
-!  이 명령을 실행시 <Rn>값이 변하도록 함. <mode>가 DB인 경우, 필요  
-<c>    condition flag. 생략하면 always (AL)을 나타냄.  
+\<Rn\>  base register  
+!  이 명령을 실행시 \<Rn\>값이 변하도록 함. \<mode\>가 DB인 경우, 필요  
+\<c\>    condition flag. 생략하면 always (AL)을 나타냄.  
 
 ed20 8a10 	vstmdbeq	r0!, {s16-s31}  
 P = 1, U = 0, D = 0, W = 1  
