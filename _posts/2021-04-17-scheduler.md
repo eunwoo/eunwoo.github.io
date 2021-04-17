@@ -130,8 +130,8 @@ p.59 Instruction Synchronization Barrier
 
 it eq  
 ==
-p.236
-IfThen 명령
+p.236  
+IfThen 명령  
 - it 명령어 다음에 오는 최대 4개까지의 명령어를 조건부로 실행되도록 함   
 - it 블록: it명령어 다음에 오는 조건부 수행 명령어를 it 블록이라고 함  
 - it 블록 내의 명령어로 분기할 수 없음. 즉, 다른 명령어를 수행 중 IT블록으로 분기하는 것은 안됨. 단, 예외에서 복귀하는 것은 가능  
