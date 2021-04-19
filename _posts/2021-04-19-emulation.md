@@ -15,3 +15,9 @@ QEMU
 ARM Cortex-M3  
 --
 [https://github.com/pokitoz/qemu-lm3s6965evb](https://github.com/pokitoz/qemu-lm3s6965evb )  
+
+WSL2에서 실행 결과
+
+![Image]({{site.url}}/assets/img/emulation-arm1.png )  
+![Image]({{site.url}}/assets/img/emulation-arm2.png )  
+
