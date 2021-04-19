@@ -5,3 +5,8 @@ http://logan.tw/posts/2017/01/21/introduction-to-qemu-debootstrap/
 https://wiki.ubuntu.com/Kernel/Dev/QemuARMVexpress  
 
 
+QEMU  
+==  
+https://www.qemu.org/  
+
+https://qemu-project.gitlab.io/qemu/system/target-arm.html  
