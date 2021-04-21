@@ -4,12 +4,13 @@ uos++
 
 FreeRTOS  
 ==
-ARM Cortex-M7  
-port.c
-```
+ARM Cortex-M7을 사용하는 STM32H743ZI device를 가진 NUCLEO보드에서 STM32CubeIDE를 사용하여 FreeRTOS를 MiddleWare로 추가했을 때 자동생성되는 port.c파일을 분석  
 
+PendSV 인터럽트를 알아야 함  
 [https://mcuoneclipse.com/2016/08/28/arm-cortex-m-interrupts-and-freertos-part-3/](https://mcuoneclipse.com/2016/08/28/arm-cortex-m-interrupts-and-freertos-part-3/)  
 
+port.c
+```
 void xPortPendSVHandler( void )
 {
 	/* This is a naked function. */
