@@ -68,16 +68,17 @@ void xPortPendSVHandler( void )
 }
 ```
 
-pxCurrentTCBConst: .word pxCurrentTCB
-pxCurrentTCBConst 심볼은 08005bd0 주소를 나타내며, 이 주소에 저장된 값은 pxCurrentTCB 변수의 주소를 나타낸다.
-이는 당연한데 pxCurrentTCB는 변수이기 때문에 계속 변하므로, 컴파일시에 pxCurrentTCB의 값을 알 수는 없기 때문이다.
-map파일을 보면 pxCurrentTCB 변수(심볼)의 주소는 0x200007ac이며, list파일을 보면 이 값이 pxCurrentTCBConst 심볼에 저장되어 있음을 볼 수 있다.
+pxCurrentTCBConst: .word pxCurrentTCB  
+pxCurrentTCBConst 심볼은 08005bd0 주소를 나타내며, 이 주소에 저장된 값은 pxCurrentTCB 변수의 주소를 나타낸다.  
+이는 당연한데 pxCurrentTCB는 변수이기 때문에 계속 변하므로, 컴파일시에 pxCurrentTCB의 값을 알 수는 없기 때문이다.  
+map파일을 보면 pxCurrentTCB 변수(심볼)의 주소는 0x200007ac이며, list파일을 보면 이 값이 pxCurrentTCBConst 심볼에 저장되어 있음을 볼 수 있다.  
+<led_test.map>  
 ```
  .bss.pxCurrentTCB
                 0x00000000200007ac        0x4 Middlewares/Third_Party/FreeRTOS/Source/tasks.o
                 0x00000000200007ac                pxCurrentTCB
 ```
-
+<led_test.list>  
 ```
 08005b70 <PendSV_Handler>:
 
