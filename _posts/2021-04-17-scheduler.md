@@ -70,7 +70,9 @@ void xPortPendSVHandler( void )
 
 pxCurrentTCBConst: .word pxCurrentTCB  
 pxCurrentTCBConst 심볼은 08005bd0 주소를 나타내며, 이 주소에 저장된 값은 pxCurrentTCB 변수의 주소를 나타낸다.  
-이는 당연한데 pxCurrentTCB는 변수이기 때문에 계속 변하므로, 컴파일시에 pxCurrentTCB의 값을 알 수는 없기 때문이다.  
+이는 당연한데 pxCurrentTCB는 변수이기 때문에 프로그램 실행 중 계속 변하는 값이며, 컴파일시에 pxCurrentTCB의 값은 0으로 초기화되어 있으며,  
+필요한 값은 프로그램 실행 중에 pxCurrentTCB의 값을 알아야 하기 때문에 pxCurrentTCB의 주소가 필요하기 때문이다.  
+주소를 알면 주소를 통해서 해당 변수의 값을 읽어 올 수 있다.  
 map파일을 보면 pxCurrentTCB 변수(심볼)의 주소는 0x200007ac이며, list파일을 보면 이 값이 pxCurrentTCBConst 심볼에 저장되어 있음을 볼 수 있다.  
 <led_test.map>  
 ```
