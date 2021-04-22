@@ -77,7 +77,7 @@ map파일을 보면 pxCurrentTCB 변수(심볼)의 주소는 0x200007ac이며, l
 
 <led_test.map>  
 ```
- .bss.pxCurrentTCB
+.bss.pxCurrentTCB
                 0x00000000200007ac        0x4 Middlewares/Third_Party/FreeRTOS/Source/tasks.o
                 0x00000000200007ac                pxCurrentTCB
 ```
