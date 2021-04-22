@@ -74,12 +74,14 @@ pxCurrentTCBConst 심볼은 08005bd0 주소를 나타내며, 이 주소에 저�
 필요한 값은 프로그램 실행 중에 pxCurrentTCB의 값을 알아야 하기 때문에 pxCurrentTCB의 주소가 필요하기 때문이다.  
 주소를 알면 주소를 적절한 어셈블리 명령을 사용하여 해당 변수의 값을 읽어 올 수 있다.  
 map파일을 보면 pxCurrentTCB 변수(심볼)의 주소는 0x200007ac이며, list파일을 보면 이 값이 pxCurrentTCBConst 심볼에 저장되어 있음을 볼 수 있다.  
+
 <led_test.map>  
 ```
  .bss.pxCurrentTCB
                 0x00000000200007ac        0x4 Middlewares/Third_Party/FreeRTOS/Source/tasks.o
                 0x00000000200007ac                pxCurrentTCB
 ```
+
 <led_test.list>  
 ```
 08005b70 <PendSV_Handler>:
@@ -128,6 +130,7 @@ void xPortPendSVHandler( void )
 	);
 }
 ```
+
 
 mrs r0, psp
 ==
