@@ -30,7 +30,7 @@ void xPortPendSVHandler( void )
     "   stmdb r0!, {r4-r11, r14}            \n" /* Save the core registers. */
     "   str r0, [r2]                        \n" /* Save the new top of stack into the first member of the TCB. */
     "                                       \n"
-    "   stmdb sp!, {r0, r3}                 \n"
+    "   stmdb sp!, {r0, r3}                 \n" /* sp is msp(main stack pointer), not psp(process stack pointer), r0는 psp, r3은  */
     "   mov r0, %0                          \n"
     "   msr basepri, r0                     \n"
     "   dsb                                 \n"
@@ -68,37 +68,62 @@ void xPortPendSVHandler( void )
 }
 ```
 
+pxCurrentTCBConst: .word pxCurrentTCB
+pxCurrentTCBConst 심볼은 08005bd0 주소를 나타내며, 이 주소에 저장된 값은 pxCurrentTCB 변수의 주소를 나타낸다.
+이는 당연한데 pxCurrentTCB는 변수이기 때문에 계속 변하므로, 컴파일시에 pxCurrentTCB의 값을 알 수는 없기 때문이다.
+map파일을 보면 pxCurrentTCB 변수(심볼)의 주소는 0x200007ac이며, list파일을 보면 이 값이 pxCurrentTCBConst 심볼에 저장되어 있음을 볼 수 있다.
 ```
-08003f00 <PendSV_Handler>:
- 8003f00:	f3ef 8009 	mrs	r0, PSP
- 8003f04:	f3bf 8f6f 	isb	sy
- 8003f08:	4b15      	ldr	r3, [pc, #84]	; (8003f60 <pxCurrentTCBConst>)
- 8003f0a:	681a      	ldr	r2, [r3, #0]
- 8003f0c:	f01e 0f10 	tst.w	lr, #16
- 8003f10:	bf08      	it	eq
- 8003f12:	ed20 8a10 	vstmdbeq	r0!, {s16-s31}
- 8003f16:	e920 4ff0 	stmdb	r0!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
- 8003f1a:	6010      	str	r0, [r2, #0]
- 8003f1c:	e92d 0009 	stmdb	sp!, {r0, r3}
- 8003f20:	f04f 0050 	mov.w	r0, #80	; 0x50
- 8003f24:	f380 8811 	msr	BASEPRI, r0
- 8003f28:	f3bf 8f4f 	dsb	sy
- 8003f2c:	f3bf 8f6f 	isb	sy
- 8003f30:	f7ff fb7e 	bl	8003630 <vTaskSwitchContext>
- 8003f34:	f04f 0000 	mov.w	r0, #0
- 8003f38:	f380 8811 	msr	BASEPRI, r0
- 8003f3c:	bc09      	pop	{r0, r3}
- 8003f3e:	6819      	ldr	r1, [r3, #0]
- 8003f40:	6808      	ldr	r0, [r1, #0]
- 8003f42:	e8b0 4ff0 	ldmia.w	r0!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
- 8003f46:	f01e 0f10 	tst.w	lr, #16
- 8003f4a:	bf08      	it	eq
- 8003f4c:	ecb0 8a10 	vldmiaeq	r0!, {s16-s31}
- 8003f50:	f380 8809 	msr	PSP, r0
- 8003f54:	f3bf 8f6f 	isb	sy
- 8003f58:	4770      	bx	lr
- 8003f5a:	bf00      	nop
- 8003f5c:	f3af 8000 	nop.w
+ .bss.pxCurrentTCB
+                0x00000000200007ac        0x4 Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+                0x00000000200007ac                pxCurrentTCB
+```
+
+```
+08005b70 <PendSV_Handler>:
+
+void xPortPendSVHandler( void )
+{
+	/* This is a naked function. */
+
+	__asm volatile
+ 8005b70:	f3ef 8009 	mrs	r0, PSP
+ 8005b74:	f3bf 8f6f 	isb	sy
+ 8005b78:	4b15      	ldr	r3, [pc, #84]	; (8005bd0 <pxCurrentTCBConst>)
+ 8005b7a:	681a      	ldr	r2, [r3, #0]
+ 8005b7c:	f01e 0f10 	tst.w	lr, #16
+ 8005b80:	bf08      	it	eq
+ 8005b82:	ed20 8a10 	vstmdbeq	r0!, {s16-s31}
+ 8005b86:	e920 4ff0 	stmdb	r0!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+ 8005b8a:	6010      	str	r0, [r2, #0]
+ 8005b8c:	e92d 0009 	stmdb	sp!, {r0, r3}
+ 8005b90:	f04f 0050 	mov.w	r0, #80	; 0x50
+ 8005b94:	f380 8811 	msr	BASEPRI, r0
+ 8005b98:	f3bf 8f4f 	dsb	sy
+ 8005b9c:	f3bf 8f6f 	isb	sy
+ 8005ba0:	f7fe ffc4 	bl	8004b2c <vTaskSwitchContext>
+ 8005ba4:	f04f 0000 	mov.w	r0, #0
+ 8005ba8:	f380 8811 	msr	BASEPRI, r0
+ 8005bac:	bc09      	pop	{r0, r3}
+ 8005bae:	6819      	ldr	r1, [r3, #0]
+ 8005bb0:	6808      	ldr	r0, [r1, #0]
+ 8005bb2:	e8b0 4ff0 	ldmia.w	r0!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+ 8005bb6:	f01e 0f10 	tst.w	lr, #16
+ 8005bba:	bf08      	it	eq
+ 8005bbc:	ecb0 8a10 	vldmiaeq	r0!, {s16-s31}
+ 8005bc0:	f380 8809 	msr	PSP, r0
+ 8005bc4:	f3bf 8f6f 	isb	sy
+ 8005bc8:	4770      	bx	lr
+ 8005bca:	bf00      	nop
+ 8005bcc:	f3af 8000 	nop.w
+
+08005bd0 <pxCurrentTCBConst>:
+ 8005bd0:	200007ac 	.word	0x200007ac
+	"										\n"
+	"	.align 4							\n"
+	"pxCurrentTCBConst: .word pxCurrentTCB	\n"
+	::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY)
+	);
+}
 ```
 
 mrs r0, psp
