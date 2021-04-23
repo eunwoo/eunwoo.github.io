@@ -86,12 +86,53 @@ port.c
 ```
 mrs: move to (general) register from special register  
 r0 := psp
-psp의 값을 r0에 대입. psp는 process stack이며, thread mode에서 동작할 때 사용되는 스택임.  
+psp의 값을 r0에 대입. psp는 process stack이며, thread mode에서 동작할 때 사용되는 스택이다.  
 cortex-m의 동작모드는 thread mode와 handler mode가 있다. thread mode는 사용자 프로그램이 동작하는 모드이며  
 handler mode는 operating system이 동작하는 모드이다.  
 r0에 psp를 읽어 오는 이유는 사용자 프로그램의 컨텍스트인 레지스터를 저장하기 위해서다.  
 인터럽트나 예외가 발생했을 때, cortex-m은 r0~r3까지 스택에 저장하나 r4부터는 스택에 저장하지 않기 때문에  
-저장하는 코드를 추가해 주어야 한다.
+저장하는 코드를 추가해 주어야 한다.  
+it eq  
+--
+p.236  
+IfThen 명령  
+- it 명령어 다음에 오는 최대 4개까지의 명령어를 조건부로 실행되도록 함   
+- it 블록: it명령어 다음에 오는 조건부 수행 명령어를 it 블록이라고 함  
+- it 블록 내의 명령어로 분기할 수 없음. 즉, 다른 명령어를 수행 중 IT블록으로 분기하는 것은 안됨. 단, 예외에서 복귀하는 것은 가능  
+- CMP, CMN, TST 외의 다른 명령어는 조건플래그를 설정하지 않음.  
+IT{x{y{z}}}\<q\> \<firstcond\>  
+x: 두번째 명령어의 조건을 지정  
+y: 세번째 명령어의 조건을 지정  
+z: 네번째 명령어의 조건을 지정  
+\<x\>, \<y\>, \<z\>는 T 또는 E 가능. T=Then, E=Else를 의미.  
+T \<firstcond\> 조건을 만족하면 실행.  
+E \<firstcond\> 조건을 만족하지 않으면 실행.  
+<q>  
+	.N narrow, 16-bit 명령어 생성  
+	.W wide, 32-bit 명령어 생성  
+둘 다 지정되지 않으면, 16-bit 명령어 생성  
+
+vstmdbeq	r0!, {s16-s31}  
+--
+p.499  
+VSTM{\<mode\>}{\<c\>}{\<q\>}{.\<size\>} \<Rn\>{!}, \<list\>  
+\<mode\>  
+  IA  Increment After  
+  DB  Decrement Before. Stack에 저장시 주소가 감소해야 하므로 이 설정 사용
+\<Rn\>  base register  
+!  이 명령을 실행시 \<Rn\>값이 변하도록 함. \<mode\>가 DB인 경우, 필요  
+\<c\>    condition flag. 생략하면 always (AL)을 나타냄.  
+
+ed20 8a10 	vstmdbeq	r0!, {s16-s31}  
+P = 1, U = 0, D = 0, W = 1  
+Vd = 0x08, imm8 = 0x10  
+d = UInt(Vd:D) = UInt(0x08:0) = 0x10 = 16  저장할 레지스터 목록의 첫번째 레지스터 번호
+regs = UInt(imm8) = 0x10 = 16 저장할 레지스터의 개수  
+imm32 = ZeroExtend(imm8:'00', 32) =  0x40 = 64 하위에 2비트를 0을 추가한 후, 32비트로 확장, 어드레스 감소값  
+저장할 레지스터의 개수가 16개이고, 각각이 4바이트이므로, 어드레스를 64 감소함.  
+![Image Alt Exception return]({{site.url}}/assets/img/VSTM1.png )  	
+![Image Alt Exception return]({{site.url}}/assets/img/VSTM2.png )  	
+
 
 20줄
 ==
@@ -284,46 +325,6 @@ p.59 Instruction Synchronization Barrier
 ![Image Alt Exception return]({{site.url}}/assets/img/ISB1.png )  
 
 
-it eq  
-==
-p.236  
-IfThen 명령  
-- it 명령어 다음에 오는 최대 4개까지의 명령어를 조건부로 실행되도록 함   
-- it 블록: it명령어 다음에 오는 조건부 수행 명령어를 it 블록이라고 함  
-- it 블록 내의 명령어로 분기할 수 없음. 즉, 다른 명령어를 수행 중 IT블록으로 분기하는 것은 안됨. 단, 예외에서 복귀하는 것은 가능  
-- CMP, CMN, TST 외의 다른 명령어는 조건플래그를 설정하지 않음.  
-IT{x{y{z}}}\<q\> \<firstcond\>  
-x: 두번째 명령어의 조건을 지정  
-y: 세번째 명령어의 조건을 지정  
-z: 네번째 명령어의 조건을 지정  
-\<x\>, \<y\>, \<z\>는 T 또는 E 가능. T=Then, E=Else를 의미.  
-T \<firstcond\> 조건을 만족하면 실행.  
-E \<firstcond\> 조건을 만족하지 않으면 실행.  
-<q>  
-	.N narrow, 16-bit 명령어 생성  
-	.W wide, 32-bit 명령어 생성  
-둘 다 지정되지 않으면, 16-bit 명령어 생성  
-
-vstmdbeq	r0!, {s16-s31}  
-==
-p.499  
-VSTM{\<mode\>}{\<c\>}{\<q\>}{.\<size\>} \<Rn\>{!}, \<list\>  
-\<mode\>  
-  IA  Increment After  
-  DB  Decrement Before. Stack에 저장시 주소가 감소해야 하므로 이 설정 사용
-\<Rn\>  base register  
-!  이 명령을 실행시 \<Rn\>값이 변하도록 함. \<mode\>가 DB인 경우, 필요  
-\<c\>    condition flag. 생략하면 always (AL)을 나타냄.  
-
-ed20 8a10 	vstmdbeq	r0!, {s16-s31}  
-P = 1, U = 0, D = 0, W = 1  
-Vd = 0x08, imm8 = 0x10  
-d = UInt(Vd:D) = UInt(0x08:0) = 0x10 = 16  저장할 레지스터 목록의 첫번째 레지스터 번호
-regs = UInt(imm8) = 0x10 = 16 저장할 레지스터의 개수  
-imm32 = ZeroExtend(imm8:'00', 32) =  0x40 = 64 하위에 2비트를 0을 추가한 후, 32비트로 확장, 어드레스 감소값  
-저장할 레지스터의 개수가 16개이고, 각각이 4바이트이므로, 어드레스를 64 감소함.  
-![Image Alt Exception return]({{site.url}}/assets/img/VSTM1.png )  	
-![Image Alt Exception return]({{site.url}}/assets/img/VSTM2.png )  	
 	
 [Some Link]({% post_url 2021-04-16-eclipse-embedded-nucleo144-stm32h743zi2 %})
 
