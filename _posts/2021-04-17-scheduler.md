@@ -92,11 +92,11 @@ handler mode는 operating system이 동작하는 모드이다.
 r0에 psp를 읽어 오는 이유는 사용자 프로그램의 컨텍스트인 레지스터를 저장하기 위해서다.  
 인터럽트나 예외가 발생했을 때, cortex-m은 r0~r3까지 스택에 저장하나 r4부터는 스택에 저장하지 않기 때문에  
 저장하는 코드를 추가해 주어야 한다.  
-
+![Image]({{site.url}}/assets/img/contextsave1.png ) 
 it eq  
 --
 p.236  
-<span style="color:red">*I*</span>f*T*hen 명령  
+<span style="color:red">*I*</span>f<span style="color:red">*T*</span>hen 명령  
 - it 명령어 다음에 오는 최대 4개까지의 명령어를 조건부로 실행되도록 함   
 - it 블록: it명령어 다음에 오는 조건부 수행 명령어를 it 블록이라고 함  
 - it 블록 내의 명령어로 분기할 수 없음. 즉, 다른 명령어를 수행 중 IT블록으로 분기하는 것은 안됨. 단, 예외에서 복귀하는 것은 가능  
@@ -112,6 +112,10 @@ E \<firstcond\> 조건을 만족하지 않으면 실행.
 	.N narrow, 16-bit 명령어 생성  
 	.W wide, 32-bit 명령어 생성  
 둘 다 지정되지 않으면, 16-bit 명령어 생성  
+
+eq 조건은 PSR(Program Status Register)의 Z flag가 0일 때 참이 된다.  tst r14, #0x10 명령은 r15를 0x10과 AND연산했을 때,  
+결과가 0이면 Z flag가 0이 된다.  따라서 r14의 bit4가 0이면 vstmdbeq 가 수행된다.  
+r14의 bit4가 0이면 floating point register가 사용되었다는 것을 나타내기 때문에 레지스터를 저장한다.  
 
 vstmdbeq	r0!, {s16-s31}  
 --
