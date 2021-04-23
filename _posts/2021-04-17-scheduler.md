@@ -11,67 +11,101 @@ PendSV 인터럽트를 알아야 함
 
 port.c
 ```
-void xPortPendSVHandler( void )
-{
-	/* This is a naked function. */
-
-    __asm volatile
-    (
-    "   mrs r0, psp                         \n"
-    "   isb                                 \n"
-    "                                       \n"
-    "   ldr r3, pxCurrentTCBConst           \n" /* Get the location of the current TCB. */
-    "   ldr r2, [r3]                        \n"
-    "                                       \n"
-    "   tst r14, #0x10                      \n" /* Is the task using the FPU context?  If so, push high vfp registers. */
-    "   it eq                               \n"
-    "   vstmdbeq r0!, {s16-s31}             \n"
-    "                                       \n"
-    "   stmdb r0!, {r4-r11, r14}            \n" /* Save the core registers. */
-    "   str r0, [r2]                        \n" /* Save the new top of stack into the first member of the TCB. */
-    "                                       \n"
-    "   stmdb sp!, {r0, r3}                 \n" /* sp is msp(main stack pointer), not psp(process stack pointer), r0는 psp, r3은  */
-    "   mov r0, %0                          \n"
-    "   msr basepri, r0                     \n"
-    "   dsb                                 \n"
-    "   isb                                 \n"
-    "   bl vTaskSwitchContext               \n"
-    "   mov r0, #0                          \n"
-    "   msr basepri, r0                     \n"
-    "   ldmia sp!, {r0, r3}                 \n"
-    "                                       \n"
-    "   ldr r1, [r3]                        \n" /* The first item in pxCurrentTCB is the task top of stack. */
-    "   ldr r0, [r1]                        \n"
-    "                                       \n"
-    "   ldmia r0!, {r4-r11, r14}            \n" /* Pop the core registers. */
-    "                                       \n"
-    "   tst r14, #0x10                      \n" /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
-    "   it eq                               \n"
-    "   vldmiaeq r0!, {s16-s31}             \n"
-    "                                       \n"
-    "   msr psp, r0                         \n"
-    "   isb                                 \n"
-    "                                       \n"
-    #ifdef WORKAROUND_PMU_CM001 /* XMC4000 specific errata workaround. */
-        #if WORKAROUND_PMU_CM001 == 1
-    "           push { r14 }                \n"
-    "           pop { pc }                  \n"
-        #endif
-    #endif
-    "                                       \n"
-    "   bx r14                              \n"
-    "                                       \n"
-    "   .align 4                            \n"
-    "pxCurrentTCBConst: .word pxCurrentTCB  \n"
-    ::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY)
-    );
-}
+01void xPortPendSVHandler( void )
+02{
+03	/* This is a naked function. */
+04
+05    __asm volatile
+06    (
+07    "   mrs r0, psp                         \n"
+08    "   isb                                 \n"
+09    "                                       \n"
+10    "   ldr r3, pxCurrentTCBConst           \n" /* Get the location of the current TCB. */
+11    "   ldr r2, [r3]                        \n"
+12    "                                       \n"
+13    "   tst r14, #0x10                      \n" /* Is the task using the FPU context?  If so, push high vfp registers. */
+14    "   it eq                               \n"
+15    "   vstmdbeq r0!, {s16-s31}             \n"
+16    "                                       \n"
+17    "   stmdb r0!, {r4-r11, r14}            \n" /* Save the core registers. */
+18    "   str r0, [r2]                        \n" /* Save the new top of stack into the first member of the TCB. */
+19    "                                       \n"
+20    "   stmdb sp!, {r0, r3}                 \n" /* sp is msp(main stack pointer), not psp(process stack pointer), r0는 psp, r3은  */
+21    "   mov r0, %0                          \n"
+22    "   msr basepri, r0                     \n"
+23    "   dsb                                 \n"
+24    "   isb                                 \n"
+25    "   bl vTaskSwitchContext               \n"
+26    "   mov r0, #0                          \n"
+27    "   msr basepri, r0                     \n"
+28    "   ldmia sp!, {r0, r3}                 \n"
+29    "                                       \n"
+30    "   ldr r1, [r3]                        \n" /* The first item in pxCurrentTCB is the task top of stack. */
+31    "   ldr r0, [r1]                        \n"
+32    "                                       \n"
+33    "   ldmia r0!, {r4-r11, r14}            \n" /* Pop the core registers. */
+34    "                                       \n"
+35    "   tst r14, #0x10                      \n" /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
+36    "   it eq                               \n"
+37    "   vldmiaeq r0!, {s16-s31}             \n"
+38    "                                       \n"
+39    "   msr psp, r0                         \n"
+40    "   isb                                 \n"
+41    "                                       \n"
+42    #ifdef WORKAROUND_PMU_CM001 /* XMC4000 specific errata workaround. */
+43        #if WORKAROUND_PMU_CM001 == 1
+44    "           push { r14 }                \n"
+45    "           pop { pc }                  \n"
+46        #endif
+47    #endif
+48    "                                       \n"
+49    "   bx r14                              \n"
+50    "                                       \n"
+51    "   .align 4                            \n"
+52    "pxCurrentTCBConst: .word pxCurrentTCB  \n"
+53    ::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY)
+54    );
+55}
 ```
+07 ~ 18 : context save and update stack bottom address (컨텍스트 저장 및 스택 최하위 주소 업데이트)
+==
+```
+07    "   mrs r0, psp                         \n"
+08    "   isb                                 \n"
+09    "                                       \n"
+10    "   ldr r3, pxCurrentTCBConst           \n" /* Get the location of the current TCB. */
+11    "   ldr r2, [r3]                        \n"
+12    "                                       \n"
+13    "   tst r14, #0x10                      \n" /* Is the task using the FPU context?  If so, push high vfp registers. */
+14    "   it eq                               \n"
+15    "   vstmdbeq r0!, {s16-s31}             \n"
+16    "                                       \n"
+17    "   stmdb r0!, {r4-r11, r14}            \n" /* Save the core registers. */
+18    "   str r0, [r2]                        \n" /* Save the new top of stack into the first member of the TCB. */
+```
+mrs: move to (general) register from special register  
+r0 := psp
+psp의 값을 r0에 대입. psp는 process stack이며, thread mode에서 동작할 때 사용되는 스택임.  
+cortex-m의 동작모드는 thread mode와 handler mode가 있다. thread mode는 사용자 프로그램이 동작하는 모드이며  
+handler mode는 operating system이 동작하는 모드이다.  
+r0에 psp를 읽어 오는 이유는 사용자 프로그램의 컨텍스트인 레지스터를 저장하기 위해서다.  
+인터럽트나 예외가 발생했을 때, cortex-m은 r0~r3까지 스택에 저장하나 r4부터는 스택에 저장하지 않기 때문에  
+저장하는 코드를 추가해 주어야 한다.
 
-pxCurrentTCBConst: .word pxCurrentTCB  
+20줄
+==
+```
+stmdb sp!, {r0, r3}  
+```
+r0와 r3를 main stack에 저장한다. sp는 process stack이 아니라 main stack를 나타낸다.  
+process stack은 
+
+
+52줄 pxCurrentTCBConst: .word pxCurrentTCB  
+==
 pxCurrentTCBConst 심볼은 08005bd0 주소를 나타내며, 이 주소에 저장된 값은 .word로 지정되어 있기 때문에 4바이트이고 pxCurrentTCB 변수의 주소를 나타낸다.  
 이는 당연한데 pxCurrentTCB는 변수이기 때문에 프로그램 실행 중 계속 변하는 값이며, 컴파일시에 pxCurrentTCB의 값은 0으로 초기화되어 있으며,  
-필요한 값은 프로그램 실행 중에 pxCurrentTCB의 값을 알아야 하기 때문에 pxCurrentTCB의 주소가 필요하기 때문이다.  
+필요한 값은 프로그램 실행 중에 변하는 pxCurrentTCB의 값이기 때문에 pxCurrentTCB의 주소가 필요하기 때문이다.  
 주소를 알면 주소를 적절한 어셈블리 명령을 사용하여 해당 변수의 값을 읽어 올 수 있다.  
 map파일을 보면 pxCurrentTCB 변수(심볼)의 주소는 0x200007ac이며, list파일을 보면 이 값이 pxCurrentTCBConst 심볼에 저장되어 있음을 볼 수 있다.  
 c언어로 표현하면 pxCurrentTCBConst = &pxCurrentTCB; 로 나타낼 수 있다.  
@@ -221,10 +255,7 @@ void xPortPendSVHandler( void )
 ```
 
 
-mrs r0, psp
-==
-mrs: move to (general) register from special register  
-r0 = psp
+
 
 psp: process stack  
 
