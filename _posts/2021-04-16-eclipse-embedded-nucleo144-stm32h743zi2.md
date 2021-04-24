@@ -8,7 +8,7 @@ https://www.st.com/en/evaluation-tools/nucleo-h743zi.html
 LED Port 번호  
 ==
 Mbed Studio에서는 NUCLEO144 STM32H743ZI2를 지원한다. 소스를 보면 아래와 같은 부분이 있다.  
-- PinNames.h
+- {Project Root}/targets/TARGET_STM/TARGET_STM32H7/TARGET_STM32H743xI/TARGET_NUCLEO_H743ZI2/PinNames.h
 ```
     // Generic signals namings
     LED1        = PB_0,  // LD1 = GREEN
