@@ -96,7 +96,10 @@ handler mode는 operating system이 동작하는 모드이다.
 r0에 psp를 읽어 오는 이유는 사용자 프로그램의 컨텍스트인 레지스터를 저장하기 위해서다.  
 인터럽트나 예외가 발생했을 때, cortex-m은 r0~r3까지 스택에 저장하나 r4부터는 스택에 저장하지 않기 때문에  
 저장하는 코드를 추가해 주어야 한다.  
-![Image]({{site.url}}/assets/img/contextsave1.png ) 
+![Image]({{site.url}}/assets/img/contextsave1.png )  
+인터럽트 서비스 루틴(Interrupt Service Routine, ISR 또는 Interrupt Handler)에서는 ISR에서 사용하는 레지스터만 스택에 저장하고 리턴하기 전에 복구하면 되지만 컨텍스트 저장인 경우에는 일반적으로 Thread에서 모든 레지스터를 사용하므로 모든 레지스터를 쓰레드 스택에 저장해 놓은 후에 쓰레드가 다시 시작될 때 복구해 주어야 한다. 아래 사이트에 Q&A 참고.  
+[https://community.arm.com/developer/tools-software/tools/f/keil-forum/25373/cortex-saving-registers-during-interrupts](https://community.arm.com/developer/tools-software/tools/f/keil-forum/25373/cortex-saving-registers-during-interrupts)  
+
 it eq  
 --
 p.236  
