@@ -5,6 +5,17 @@ NUCLEO144 STM32H743ZI2
 https://www.st.com/en/evaluation-tools/nucleo-h743zi.html  
 타겟보드는 STM32CubeIDE를 사용하여 다운로드와 디버깅이 가능한데, Eclipse로도 컴파일/다운로드/디버깅이 가능한지 확인해봄.  
 
+LED Port 번호  
+==
+Mbed Studio에서는 NUCLEO144 STM32H743ZI2를 지원한다. 소스를 보면 아래와 같은 부분이 있다.  
+- PinNames.h
+```
+    // Generic signals namings
+    LED1        = PB_0,  // LD1 = GREEN
+    LED2        = PE_1,  // Yellow
+    LED3        = PB_14, // Red
+```
+
 Eclipse 버전
 ==
 ![Image Alt 텍스트]({{site.url}}/assets/img/eclipse.png )
