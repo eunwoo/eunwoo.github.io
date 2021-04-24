@@ -1,6 +1,6 @@
 ---
 title: "Scheduler in Embedded RTOS"
-categories: IDE
+categories: 
 ---
 
 uos++
