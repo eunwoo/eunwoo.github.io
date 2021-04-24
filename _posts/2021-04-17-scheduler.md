@@ -9,6 +9,10 @@ ARM Cortex-M7을 사용하는 STM32H743ZI device를 가진 NUCLEO보드에서 ST
 PendSV 인터럽트를 알아야 함  
 [https://mcuoneclipse.com/2016/08/28/arm-cortex-m-interrupts-and-freertos-part-3/](https://mcuoneclipse.com/2016/08/28/arm-cortex-m-interrupts-and-freertos-part-3/)  
 
+아래 링크에 스케쥴러 코드에 대해 설명이 나옴  
+[https://interrupt.memfault.com/blog/cortex-m-rtos-context-switching](https://interrupt.memfault.com/blog/cortex-m-rtos-context-switching)  
+
+
 port.c
 ```
 01void xPortPendSVHandler( void )
