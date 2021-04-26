@@ -15,6 +15,13 @@ Mbed Studio에서는 NUCLEO144 STM32H743ZI2를 지원한다. 소스를 보면 �
     LED2        = PE_1,  // Yellow
     LED3        = PB_14, // Red
 ```
+User Input
+==
+```
+    // Standardized button names
+    USER_BUTTON = PC_13,
+    BUTTON1 = USER_BUTTON,
+```
 
 Eclipse 버전
 ==
