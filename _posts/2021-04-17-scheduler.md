@@ -153,15 +153,22 @@ imm32 = ZeroExtend(imm8:'00', 32) =  0x40 = 64 하위에 2비트를 0을 추가�
 [https://developer.arm.com/documentation/dui0646/c/the-cortex-m7-processor/exception-model/exception-entry-and-return](https://developer.arm.com/documentation/dui0646/c/the-cortex-m7-processor/exception-model/exception-entry-and-return)  
 ![Image Alt Exception return]({{site.url}}/assets/img/exception return4.png )  
 
-s0~s15는 자동으로 저장되므로, s16~s31을 저장한다.  
+s0\~s15는 자동으로 저장되므로, s16\~s31을 저장한다.  
 
 20줄
 ==
 ```
-stmdb sp!, {r0, r3}  
+20    "   stmdb sp!, {r0, r3}                 \n" /* sp is msp(main stack pointer), not psp(process stack pointer), r0는 psp, r3은  */
 ```
 r0와 r3를 main stack에 저장한다. sp는 process stack이 아니라 main stack를 나타낸다.  
-process stack은 
+process stack은 thread mode에서 사용하고, 인터럽트나 예외인 경우에는 main stack이 사용된다.  
+20번째 줄은 28번째 줄과 쌍을 이루어야 한다. r0와 r3를 저장한 후에는 다시 r0와 r3를 복구해야 스택 오버플로우가 발생하지 않는다.
+```
+28    "   ldmia sp!, {r0, r3}                 \n"
+```
+r0는 사용하지 않는 레지스터이기 때문에 20번째 줄과 28번째 줄에서 모두 r0를 삭제해도 FreeRTOS가 잘 동작하는 것을 확인하였다.  
+다만, r3는 pxCurrentTCBConst 심볼이 나타내는 주소에 저장된 값을 가지며, 30번째 줄에서 다시 사용하므로 스택에 보관하였다.  
+스택에 보관하지 않을 경우에는 10번째 줄을 다시 수행하여 r3를 복구해도 될 것으로 생각한다.  
 
 
 52줄 pxCurrentTCBConst: .word pxCurrentTCB  
