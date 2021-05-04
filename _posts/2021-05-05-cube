@@ -1,0 +1,10 @@
+---
+title: "Moving Layered Cube using OpenGL"
+date: 2021-05-05 08:26:28 -0400
+categories: opengl
+---
+
+Python과 OpenGL을 사용하여 위키에 나오는 4차원 그림을 그려봄  
+==
+
+![image]({{site.url}}/img/8-cell-simple.gif )  
