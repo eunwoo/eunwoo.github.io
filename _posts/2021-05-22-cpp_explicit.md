@@ -9,7 +9,7 @@ gcc ex_class.cpp -std=c++17 -lstdc++ -fno-elide-constructors
 구체적으로는 return value optimization이 수행되지 않도록 한다. 아래 위키를 참고한다.
 https://en.wikipedia.org/wiki/Copy_elision  
   
-```
+```C++
 File: ex_class.cpp
 01: #include <iostream>
 02: using namespace std;
@@ -66,7 +66,7 @@ ex_class.cpp:8:32: error: invalid constructor; you probably meant ‘SomeClass (
 ```
 
 복제생성자 앞에 explicit을 붙이면 컴파일러에서 명시적호출만 허용하기 때문에 에러가 발생한다.  
-```
+```C++
 File: ex_class1.cpp
 01: #include <iostream>
 02: using namespace std;
@@ -133,7 +133,7 @@ ex_class1.cpp:14:25: note:   initializing argument 1 of ‘SomeClass foo(SomeCla
 아래와 같이 수정하면 에러를 해결할 수 있다.  
 foo함수의 인자는 SomeClass이지만, 함수를 호출할 때는 double을 인자로 사용해도 에러가 발생하지 않는 이유는  
 double 인자를 갖는 생성자가 호출되기 때문이다. 참조연산자(&)를 제거해야 에러가 발생하지 않는다.  
-```
+```C++
 File: ex_class.cpp
 01: #include <iostream>
 02: using namespace std;
