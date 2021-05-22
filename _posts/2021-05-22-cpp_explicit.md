@@ -55,7 +55,7 @@ copied
 복사생성자는 8번째 줄과 같이 이미 생성된 다른 클래스를 참조하여 객체를 생성하는 생성자이다.  
 23번째, 25번째 줄에서 한 번, 27번째 줄에서 2번 호출이 되었다.  
 23번째 줄에서 복사생성자가 실행된 경우를 explicit(명시적)호출이라고 하고,  
-24번째 줄에서는 복사생성자가 2번 실행되는데 foo함수의 인자인 me 객체는 foo함수의 스택에 메모리가 생성되고 someClass객체에서 me객체로 객체가 복사될 때 복사생성자가 한 번 실행되고, 리턴값으로 객체를 반환할 때 me객체를 anotherClass객체로 복사할 때 복사생성자가 호출되는데, implicit(암시적)호출이라고 한다.  
+27번째 줄에서는 복사생성자가 2번 실행되는데 foo함수의 인자인 me 객체는 foo함수의 스택에 메모리가 생성되고 someClass객체에서 me객체로 객체가 복사될 때 복사생성자가 한 번 실행되고, 리턴값으로 객체를 반환할 때 me객체를 anotherClass객체로 복사할 때 복사생성자가 호출되는데, implicit(암시적)호출이라고 한다.  
 explicit인지 implicit인지의 구분은 생성자의 인수가 주어졌을 때, 인수 바로 앞에 객체의 이름이 있는 경우에 explicit이라고 한다.(참고 1)
 
 참고로 복사생성자의 인수에 참조연산자(&)가 없을 경우에는 에러가 발생한다.
@@ -75,7 +75,7 @@ File: ex_class1.cpp
 05: {
 06: public:
 07:   SomeClass(double d) : mValue(d) {}
-08:   <span style="color:red">explicit</span> SomeClass(const SomeClass& src) : mValue(src.mValue) { cout << "copied" << endl; }
+08:   *explicit* SomeClass(const SomeClass& src) : mValue(src.mValue) { cout << "copied" << endl; }
 09:   void setValue(double d) { mValue = d; }
 10:   double getValue() const { return mValue; }
 11: private:
