@@ -4,7 +4,11 @@ title: cpp explicit keyword
 
 컴파일러는 gcc를 사용하였다.  
 gcc ex_class.cpp -std=c++17 -lstdc++ -fno-elide-constructors  
-
+  
+-fno-elide-constructors는 컴파일러가 최적화를 통해 생성자 호출을 생략하지 않도록 지시한다.  
+구체적으로는 return value optimization이 수행되지 않도록 한다. 아래 위키를 참고한다.
+https://en.wikipedia.org/wiki/Copy_elision  
+  
 ```
 File: ex_class.cpp
 01: #include <iostream>
@@ -20,56 +24,60 @@ File: ex_class.cpp
 11: private:
 12:   double mValue;
 13: };
-14: SomeClass& foo(SomeClass &me)
+14: SomeClass foo(SomeClass me)
 15: {
-16:     cout << "foo" << endl;
-17:     return me;
+16:   cout << "foo" << endl;
+17:   return me;
 18: }
 19: int main()
 20: {
 21:   SomeClass someClass(10.0);
-22:   SomeClass newClass(someClass);
-23:   SomeClass anotherClass = foo(someClass);
-24: }
-
+22:   SomeClass cooClass = someClass;
+23:   SomeClass newClass(someClass);
+24:   SomeClass anotherClass = foo(someClass);
+25: }
 ```
-에러 없이 컴파일 됨.  
-실행결과  
+실행결과는 아래와 같다.  
 ```
+ccopied
+copied
 copied
 foo
 copied
 ```
-복사생성자는 8번째 줄과 같이 이미 생성된 다른 클래스를 참조하여 객체를 생성하는 생성자임. 인자로 const reference 타입을 가진다.  
-22번째 줄은 객체를 생성할 때 이전에 생성된 객체를 복사하여 생성하는 코드이며 복사생성자가 호출된다.  
+복사생성자는 8번째 줄과 같이 이미 생성된 다른 클래스를 참조하여 객체를 생성하는 생성자이다.  
+22번째, 23번째 줄은 객체를 생성할 때 이전에 생성된 객체를 복사하여 생성하는 코드이며 복사생성자가 호출된다.  
 실행결과 3째줄을 보면 foo함수에서 객체를 리턴할 때 복사생성자가 호출됨을 알 수 있다. 22번째 줄에서 복사생성자가 실행된 경우를 explicit(명시적)호출이라고 하고,  
-17번째 줄에서 함수의 리턴값으로 객체를 반환할 때 임시객체(이름없는 객체)가 생성될 때 복사생성자가 호출되는데, implicit(암시적)호출이라고 한다.  
+24번째 줄에서는 복사생성자가 2번 실행되는데 foo함수의 인자인 me 객체는 foo함수의 스택에 메모리가 생성되고 someClass객체에서 me객체로 객체가 복사될 때 복사생성자가 한 번 실행되고, 리턴값으로 객체를 반환할 때 me객체를 anotherClass객체로 복사할 때 복사생성자가 호출되는데, implicit(암시적)호출이라고 한다.  
 
 복제생성자 앞에 explicit을 붙이면 컴파일러에서 명시적호출만 허용하기 때문에 에러가 발생한다.  
 ```
-#include <iostream>
-using namespace std;
-
-class SomeClass
-{
-public:
-  SomeClass(double d) : mValue(d) {}
-  explicit SomeClass(const SomeClass& src) : mValue(src.mValue) { cout << "copied" << endl; }
-  void setValue(double d) { mValue = d; }
-  double getValue() const { return mValue; }
-private:
-  double mValue;
-};
-SomeClass& foo(SomeClass &me)
-{
-    cout << "foo" << endl;
-    return me;
-}
-int main()
-{
-  SomeClass someClass(10.0);
-  SomeClass anotherClass = foo(someClass);
-}
+File: ex_class1.cpp
+01: #include <iostream>
+02: using namespace std;
+03: 
+04: class SomeClass
+05: {
+06: public:
+07:   SomeClass(double d) : mValue(d) {}
+08:   explicit SomeClass(const SomeClass& src) : mValue(src.mValue) { cout << "copied" << endl; }
+09:   void setValue(double d) { mValue = d; }
+10:   double getValue() const { return mValue; }
+11: private:
+12:   double mValue;
+13: };
+14: SomeClass foo(SomeClass me)
+15: {
+16:   cout << "foo" << endl;
+17:   return me;
+18: }
+19: int main()
+20: {
+21:   SomeClass someClass(10.0);
+22:   SomeClass cooClass = someClass;
+23:   SomeClass newClass(someClass);
+24:   SomeClass anotherClass = foo(someClass);
+25: }
 ```
 
 에러메시지  
